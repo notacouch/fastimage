@@ -1,0 +1,11 @@
+{
+		"name": "fastimage/fastimage",
+		"description":"FastImage finds the size or type of an image given its uri by fetching as little as needed, ported by ",
+		"homepage": "https://github.com/sdsykes/fastimage",
+		"description": "Fastimage",
+		"type": "library",
+		"license": "MIT",
+		"require": {
+				"php": ">=5.3.0",
+		}
+}
