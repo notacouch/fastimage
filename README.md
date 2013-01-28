@@ -23,6 +23,21 @@ $type $image->getType();
 echo "filetype: " . $type;
 ```
 
+## Composer
+
+To add Fastimage as a local, per-project dependency to your project, simply add a dependency on fastimage/fastimage to your project's composer.json file. 
+
+```php
+{
+	"require": {
+		"fastimage/fastimage": "dev-master"
+	}
+}
+````
+
+
+https://packagist.org/packages/fastimage/fastimage
+
 ## References
 
 * https://github.com/sdsykes/fastimage
