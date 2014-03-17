@@ -10,7 +10,7 @@
  * @version 0.1
  */
 
-class Fastimage
+class FastImage
 {
   private $strpos = 0;
   private $str;
