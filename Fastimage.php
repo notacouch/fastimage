@@ -43,6 +43,10 @@ class FastImage
     );
   }
 
+  public function isValid()
+  {
+    return empty($this->handle) ? false : true;
+  }
 
   public function close()
   {
