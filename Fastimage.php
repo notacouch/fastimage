@@ -38,7 +38,7 @@ class FastImage
       'r',
       false,
       stream_context_create(array(
-        'http'=> array('timeout' => 1),
+        'http'=> array('timeout' => 0.5),
       ))
     );
   }
