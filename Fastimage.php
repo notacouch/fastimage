@@ -23,17 +23,24 @@ class FastImage
     if ($uri) $this->load($uri);
   }
 
-
   public function load($uri)
   {
     if ($this->handle) $this->close();
 
     $this->uri = $uri;
-		// Joy - this is a fix for URLs missing "http:"
-		if ($uri[0] == '/' && $uri[1] == '/') {
-			$uri = 'http:' . $uri;
-		}
-    $this->handle = fopen($uri, 'r');
+    // Joy - this is a fix for URLs missing "http:"
+    if ($uri[0] == '/' && $uri[1] == '/') {
+      $uri = 'http:' . $uri;
+    }
+
+    $this->handle = fopen(
+      $uri,
+      'r',
+      false,
+      stream_context_create(array(
+        'http'=> array('timeout' => 1),
+      ))
+    );
   }
 
 
