@@ -147,4 +147,41 @@ class CurlAdapter implements TransportInterface {
         return $this;
     }
 
+    /**
+     * Get the curl headers
+     *
+     * @param int $range_start What part of the file do we want to start with
+     *
+     * @return array
+     */
+    protected function getHeaders($range_start = 0)
+    {
+
+        $range_end = $range_start + $this->range;
+
+        return array(
+            "Range: bytes=$range_start-$range_end"
+        );
+    }
+
+    /**
+     * Create a curl resource
+     *
+     * @param $url
+     *
+     * @return resource
+     */
+    protected function getCurlHandle($url)
+    {
+        $handle = curl_init($url);
+        curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($handle, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($handle, CURLOPT_HTTPHEADER, $this->getHeaders());
+        curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, $this->timeout);
+        curl_setopt($handle, CURLOPT_TIMEOUT, $this->timeout);
+
+        return $handle;
+    }
+
 }
