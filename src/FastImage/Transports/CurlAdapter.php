@@ -80,6 +80,47 @@ class CurlAdapter implements TransportInterface {
     }
 
     /**
+     * @param $uris
+     *
+     * @throws Exception
+     * @return array
+     */
+    public function batch($uris)
+    {
+
+        $multi = curl_multi_init();
+
+        foreach ($uris as $uri) {
+            $code = curl_multi_add_handle($multi,$this->getCurlHandle($uri));
+
+            if($code != CURLM_OK) {
+                throw new Exception("Curl handle for $uri could not be added");
+            }
+        }
+
+        do {
+            while (($mrc = curl_multi_exec($multi, $active)) == CURLM_CALL_MULTI_PERFORM);
+            if ($mrc != CURLM_OK && $mrc != CURLM_CALL_MULTI_PERFORM) {
+                throw new Exception("Curl error code: $mrc");
+            }
+
+            if ($active && curl_multi_select($multi) === -1) {
+                // Perform a usleep if a select returns -1.
+                // See: https://bugs.php.net/bug.php?id=61141
+                usleep(250);
+            }
+        } while ($active);
+
+        $results = array();
+
+        foreach ($uris as $uri) {
+            $results[$uri] = curl_multi_getcontent($this->handles[$uri]);
+        }
+
+        return $results;
+    }
+
+    /**
      * Closes the connection to the file
      *
      * @return $this
