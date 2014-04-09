@@ -41,6 +41,28 @@ class FastImage
     }
 
     /**
+     *
+     * @param array $uris
+     * @param null  $transport
+     *
+     * @return \FastImage
+     */
+    public static function batch(array $uris, $transport = null)
+    {
+        $transport = is_null($transport) ? new \FastImage\Transports\CurlAdapter : $transport;
+
+        $responses = $transport->batch($uris);
+
+        $instances = array();
+
+        foreach ($responses as $uri => $payload) {
+            $instances[$uri] = new self(null, new \FastImage\Transports\InMemoryAdapter($payload));
+        }
+
+        return $instances;
+    }
+
+    /**
      * Load a new image
      *
      * @param $uri
