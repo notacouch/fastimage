@@ -13,10 +13,10 @@ class CurlAdapter implements TransportInterface {
 
     /**
      * The curl handle
-     * @var resource
+     *
+     * @var array  curl resources
      */
-    protected $handle;
-
+    protected $handles = array();
     /**
      * @var int
      */
@@ -66,19 +66,12 @@ class CurlAdapter implements TransportInterface {
      */
     public function open($url)
     {
-        $headers = array(
-            "Range: bytes=0-$this->range"
-        );
 
-        $this->handle = curl_init($url);
-        curl_setopt($this->handle, CURLOPT_HTTPHEADER, $headers);
-        curl_setopt($this->handle, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($this->handle, CURLOPT_CONNECTTIMEOUT, $this->timeout);
-        curl_setopt($this->handle, CURLOPT_TIMEOUT, $this->timeout);
-        $data = curl_exec($this->handle);
+        $this->handles[$url] = $this->getCurlHandle($url);
+        $data                = curl_exec($this->handles[$url]);
 
-        if (curl_errno($this->handle)) {
-            throw new Exception(curl_error($this->handle), curl_errno($this->handle));
+        if (curl_errno($this->handles[$url])) {
+            throw new Exception(curl_error($this->handles[$url]), curl_errno($this->handles[$url]));
         }
 
         $this->data = $data;
@@ -93,7 +86,10 @@ class CurlAdapter implements TransportInterface {
      */
     public function close()
     {
-        curl_close($this->handle);
+        foreach ($this->handles as $handle) {
+            curl_close($handle);
+        }
+
         return $this;
     }
 
