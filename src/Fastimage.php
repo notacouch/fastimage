@@ -1,7 +1,5 @@
 <?php
 
-use FastImage\Transports\FileStreamAdapter;
-
 /**
  * FastImage - Because sometimes you just want the size!
  * Based on the Ruby Implementation by Steven Sykes (https://github.com/sdsykes/fastimage)
@@ -35,11 +33,33 @@ class FastImage
      */
     public function __construct($uri = null, $transport = null)
     {
-        $this->transport = is_null($transport) ? new FileStreamAdapter : $transport;
+        $this->transport = is_null($transport) ? new FastImage\Transports\FileStreamAdapter : $transport;
 
         if ($uri) {
             $this->transport->open($uri);
         }
+    }
+
+    /**
+     *
+     * @param array $uris
+     * @param null  $transport
+     *
+     * @return \FastImage
+     */
+    public static function batch(array $uris, $transport = null)
+    {
+        $transport = is_null($transport) ? new \FastImage\Transports\CurlAdapter : $transport;
+
+        $responses = $transport->batch($uris);
+
+        $instances = array();
+
+        foreach ($responses as $uri => $payload) {
+            $instances[$uri] = new self(null, new \FastImage\Transports\InMemoryAdapter($payload));
+        }
+
+        return $instances;
     }
 
     /**
