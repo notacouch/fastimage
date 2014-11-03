@@ -91,7 +91,8 @@ class CurlAdapter implements TransportInterface {
         $multi = curl_multi_init();
 
         foreach ($uris as $uri) {
-            $code = curl_multi_add_handle($multi,$this->getCurlHandle($uri));
+            $this->handles[$uri] = $this->getCurlHandle($uri);
+            $code = curl_multi_add_handle($multi,$this->handles[$uri]);
 
             if($code != CURLM_OK) {
                 throw new Exception("Curl handle for $uri could not be added");
