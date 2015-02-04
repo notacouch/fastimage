@@ -1,8 +1,9 @@
 <?php
 
-require '../Fastimage.php';
+require '../vendor/autoload.php';
+//require '../src/Fastimage.php';
 
-$uri = 'http://pcdn.500px.net/8123858/7051e2440a869a3fec74406a3aa200618452c390/4.jpg';
+$uri = 'https://www.northshorelij.com/sites/default/themes/custom/nslij3/img/nslij_logo.png';
 
 echo "\n\n";
 

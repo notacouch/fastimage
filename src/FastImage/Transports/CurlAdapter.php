@@ -222,6 +222,10 @@ class CurlAdapter implements TransportInterface {
         curl_setopt($handle, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($handle, CURLOPT_CONNECTTIMEOUT, $this->timeout);
         curl_setopt($handle, CURLOPT_TIMEOUT, $this->timeout);
+        // Poor man's attempt at bypassing "403 Foooorbiddennnn"
+        $parsed_url = parse_url($url);
+        curl_setopt($handle, CURLOPT_USERAGENT, 'Mozilla');
+        curl_setopt($handle, CURLOPT_REFERER, $parsed_url['scheme'] . '://' . $parsed_url['host']);
 
         return $handle;
     }

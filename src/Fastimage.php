@@ -33,7 +33,7 @@ class FastImage
      */
     public function __construct($uri = null, $transport = null)
     {
-        $this->transport = is_null($transport) ? new FastImage\Transports\FileStreamAdapter : $transport;
+        $this->transport = is_null($transport) ? new FastImage\Transports\CurlAdapter : $transport;
 
         if ($uri) {
             $this->transport->open($uri);
@@ -100,7 +100,7 @@ class FastImage
     public function getType()
 	{
         $this->transport->resetReadPointer();
-
+        
 		if (!$this->type)
 		{
 			switch ($this->getChars(2))
@@ -114,9 +114,14 @@ class FastImage
 				case chr(0x89).'P':
 					return $this->type = 'png';
 				default:
+//					$this->type = 'default';
 					return false;
 			}
-		}
+		} 
+//		else
+//		{
+//			$this->type = 'test';
+//		}
 
 		return $this->type;
 	}
